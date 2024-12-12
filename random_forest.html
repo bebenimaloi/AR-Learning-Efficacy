@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" style="background: linear-gradient(180deg, #E0F7FA 0%, #B2EBF2 100%);">
+<head>
+    <title>Random Forest Analysis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin: 20px;
+            padding: 10px 20px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .analysis-section {
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f5f5f5;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+    <!-- Add Plotly for visualizations -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <a href="index.html" class="back-button">← Back to Dashboard</a>
+    
+    <div class="container">
+        <h1>Random Forest Analysis</h1>
+        
+        <div class="analysis-section">
+            <h2>Feature Importance</h2>
+            <div id="feature-importance-plot"></div>
+        </div>
+
+        <div class="analysis-section">
+            <h2>Model Performance</h2>
+            <div id="performance-metrics"></div>
+        </div>
+    </div>
+
+    <script>
+        // Example visualization code
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sample data - replace with your actual data
+            const data = [{
+                type: 'bar',
+                x: [0.8, 0.6, 0.4, 0.2],
+                y: ['Feature 1', 'Feature 2', 'Feature 3', 'Feature 4'],
+                orientation: 'h'
+            }];
+
+            const layout = {
+                title: 'Feature Importance',
+                xaxis: {title: 'Importance Score'},
+                yaxis: {title: 'Features'}
+            };
+
+            Plotly.newPlot('feature-importance-plot', data, layout);
+        });
+    </script>
+</body>
+</html>

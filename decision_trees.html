@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" style="background: linear-gradient(180deg, #E0F7FA 0%, #B2EBF2 100%);">
+<head>
+    <title>Decision Tree Analysis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin: 20px;
+            padding: 10px 20px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .analysis-section {
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f5f5f5;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .metric-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px;
+            display: inline-block;
+            width: calc(20% - 20px);
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2196F3;
+        }
+
+        .metric-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        #tree-visualization {
+            width: 100%;
+            height: 600px;
+            overflow: auto;
+        }
+    </style>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <a href="index.html" class="back-button">← Back to Dashboard</a>
+    
+    <div class="container">
+        <h1>Decision Tree Analysis</h1>
+        
+        <div class="analysis-section">
+            <h2>Model Performance Metrics</h2>
+            <div id="performance-metrics">
+                <div class="metric-card">
+                    <div class="metric-value" id="accuracy">0.856</div>
+                    <div class="metric-label">Accuracy</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="precision">0.842</div>
+                    <div class="metric-label">Precision</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="recall">0.856</div>
+                    <div class="metric-label">Recall</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="f1">0.847</div>
+                    <div class="metric-label">F1 Score</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="auc-roc">0.923</div>
+                    <div class="metric-label">AUC-ROC</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="analysis-section">
+            <h2>Feature Importance</h2>
+            <div id="feature-importance-plot"></div>
+        </div>
+
+        <div class="analysis-section">
+            <h2>Decision Tree Visualization</h2>
+            <div id="tree-visualization"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Feature importance visualization
+            const features = ['Cognitive Abilities', 'Engagement Levels', 'Pre-Test Scores', 
+                            'Post-Test Scores', 'Time Spent on AR', 'Frequency of AR Use'];
+            const importanceValues = [0.25, 0.20, 0.18, 0.15, 0.12, 0.10];  // Example values
+
+            const featureData = [{
+                type: 'bar',
+                x: features,
+                y: importanceValues,
+                marker: {
+                    color: '#2196F3'
+                }
+            }];
+
+            const featureLayout = {
+                title: 'Feature Importance',
+                xaxis: {title: 'Features'},
+                yaxis: {title: 'Importance Score'},
+                margin: {b: 100}
+            };
+
+            Plotly.newPlot('feature-importance-plot', featureData, featureLayout);
+
+            // Tree visualization using D3
+            const treeData = {
+                name: "Root",
+                value: 100,
+                children: [
+                    {
+                        name: "Cognitive Abilities ≤ 7.5",
+                        value: 60,
+                        children: [
+                            {
+                                name: "Engagement ≤ 6.0",
+                                value: 35,
+                                children: [
+                                    {name: "Low Performance", value: 20},
+                                    {name: "Medium Performance", value: 15}
+                                ]
+                            },
+                            {
+                                name: "Engagement > 6.0",
+                                value: 25,
+                                children: [
+                                    {name: "Medium Performance", value: 15},
+                                    {name: "High Performance", value: 10}
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        name: "Cognitive Abilities > 7.5",
+                        value: 40,
+                        children: [
+                            {
+                                name: "Pre-Test ≤ 8.0",
+                                value: 25,
+                                children: [
+                                    {name: "Medium Performance", value: 15},
+                                    {name: "High Performance", value: 10}
+                                ]
+                            },
+                            {
+                                name: "Pre-Test > 8.0",
+                                value: 15,
+                                children: [
+                                    {name: "High Performance", value: 15}
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            const width = 1000;
+            const height = 500;
+            const margin = {top: 20, right: 90, bottom: 30, left: 90};
+
+            const treemap = d3.tree().size([height, width - 200]);
+            const root = d3.hierarchy(treeData);
+            const nodes = treemap(root);
+
+            const svg = d3.select("#tree-visualization")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            // Add links
+            svg.selectAll(".link")
+                .data(nodes.descendants().slice(1))
+                .enter()
+                .append("path")
+                .attr("class", "link")
+                .style("stroke", "#ccc")
+                .style("fill", "none")
+                .attr("d", d => {
+                    return "M" + d.y + "," + d.x
+                        + "C" + (d.y + d.parent.y) / 2 + "," + d.x
+                        + " " + (d.y + d.parent.y) / 2 + "," + d.parent.x
+                        + " " + d.parent.y + "," + d.parent.x;
+                });
+
+            // Add nodes
+            const node = svg.selectAll(".node")
+                .data(nodes.descendants())
+                .enter()
+                .append("g")
+                .attr("class", d => "node" + (d.children ? " node--internal" : " node--leaf"))
+                .attr("transform", d => `translate(${d.y},${d.x})`);
+
+            // Add circles for nodes
+            node.append("circle")
+                .attr("r", 5)
+                .style("fill", "#69b3a2");
+
+            // Add labels
+            node.append("text")
+                .attr("dy", ".35em")
+                .attr("x", d => d.children ? -13 : 13)
+                .style("text-anchor", d => d.children ? "end" : "start")
+                .text(d => d.data.name);
+        });
+    </script>
+</body>
+</html>

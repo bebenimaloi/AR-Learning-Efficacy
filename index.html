@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" style="background: linear-gradient(180deg, #E0F7FA 0%, #B2EBF2 100%);">
+<html>
+<head>
+    <title>Random Forest Model Analysis</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: Courier New, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .plot-container {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>MACHINE LEARNING MODELS USED TO PROVE THE 
+        EFFICACY OF AUGMENTED REALITY IN LEARNING</h1>
+    
+    <a href="random_forest.html" class="plot-container" style="border-radius: 15px; border: 2px solid #000000; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; transition: all 0.3s ease; width: 45%; display: inline-block; margin: 10px; margin-top: 50px; text-decoration: none; color: inherit;">
+        <h2>Random Forests</h2>
+        <div id="feature-importance"></div>
+    </a>
+    
+    <a href="xgboost.html" class="plot-container" style="border-radius: 15px; border: 2px solid #000000; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; transition: all 0.3s ease; width: 45%; display: inline-block; margin: 10px; margin-top: 50px; text-decoration: none; color: inherit;">
+        <h2>XGBoost</h2>
+        <div id="predictions-plot"></div>
+    </a>
+
+    <a href="neural_network.html" class="plot-container" style="border-radius: 15px; border: 2px solid #000000; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; transition: all 0.3s ease; width: 45%; display: inline-block; margin: 10px; margin-top: 50px; text-decoration: none; color: inherit;">
+        <h2>Neural Network</h2>
+        <div id="svm-plot"></div>
+    </a>
+
+    <a href="decision_trees.html" class="plot-container" style="border-radius: 15px; border: 2px solid #000000; box-shadow: 0 2px 4px rgba(0,0,0,0.1); cursor: pointer; transition: all 0.3s ease; width: 45%; display: inline-block; margin: 10px; margin-top: 50px; text-decoration: none; color: inherit;">
+        <h2>Decision Trees</h2>
+        <div id="dt-plot"></div>
+    </a>
+    </div>
+
+    <script>
+        var importance = JSON.parse('{{ plots.importance | safe }}');
+        var predictions = JSON.parse('{{ plots.predictions | safe }}');
+        
+        Plotly.newPlot('feature-importance', importance.data, importance.layout);
+        Plotly.newPlot('predictions-plot', predictions.data, predictions.layout);
+    </script>
+</body>
+</html>
